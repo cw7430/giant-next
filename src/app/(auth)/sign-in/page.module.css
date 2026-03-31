@@ -1,0 +1,26 @@
+.glow-primary {
+  top: -10rem;
+  right: -10rem;
+  width: 20rem;
+  height: 20rem;
+  background-color: rgba(13, 110, 253, 0.05);
+  border-radius: 50%;
+  filter: blur(64px);
+}
+
+.glow-accent {
+  bottom: -10rem;
+  left: -10rem;
+  width: 20rem;
+  height: 20rem;
+  background-color: rgba(255, 193, 7, 0.05);
+  border-radius: 50%;
+  filter: blur(64px);
+}
+
+.glass-card {
+  max-width: 448px;
+  z-index: 10;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
