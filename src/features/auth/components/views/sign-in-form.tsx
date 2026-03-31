@@ -18,6 +18,7 @@ export default function SignInForm() {
   const { signIn } = useAuthStore();
 
   const signInForm = useForm<SignInRequestDto>({
+    mode: 'onBlur',
     resolver: zodResolver(signInRequestSchema),
     defaultValues: { userName: '', password: '', isAuto: isAutoSignIn },
   });
@@ -65,11 +66,16 @@ export default function SignInForm() {
 
     signIn(responseData);
 
+    setLoading(false);
     router.replace('/');
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)} onChange={handleFormChange}>
+    <Form
+      onSubmit={handleSubmit(onSubmit)}
+      onChange={handleFormChange}
+      noValidate
+    >
       <Form.Group className="mb-2" controlId="sign-in.user-name">
         <Form.Label>아이디</Form.Label>
         <Controller
@@ -96,7 +102,7 @@ export default function SignInForm() {
           name="password"
           render={({ field }) => (
             <Form.Control
-              type="text"
+              type="password"
               placeholder="비밀번호를 입력해주세요"
               {...field}
               isInvalid={!!errors.password}
@@ -135,7 +141,7 @@ export default function SignInForm() {
       <Button
         type="submit"
         variant="primary"
-        className="w-100 mt-2"
+        className="w-100 mt-2 mb-3"
         disabled={isLoading}
       >
         {isLoading && <Spinner size="sm" />}
