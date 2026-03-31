@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 
 import styles from './page.module.css';
+import { SignInForm } from '@/features/auth/components/views';
 
 export default function SignIn() {
   return (
@@ -20,7 +21,7 @@ export default function SignIn() {
           <div className="card-title h5">로그인</div>
           <div className="card-subtitle h6 text-muted">Giant</div>
         </div>
-        <div className="text-start pb-2 card-body">폼</div>
+        <div className="text-start pb-2 card-body"><SignInForm /></div>
       </div>
     </main>
   );
