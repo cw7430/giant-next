@@ -1,21 +1,20 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Form, Spinner } from 'react-bootstrap';
 
-import { useAppConfigStore } from '@/common/api/stores';
-import { useAuthStore } from '@/features/auth/stores/auth';
+import { useAppConfigStore, useAppState } from '@/common/stores';
+import { useAuthStore } from '@/features/auth/stores';
 import { SignInRequestDto, signInRequestSchema } from '@/features/auth/schema';
+import { signInAction } from '@/features/auth/server';
 
 export default function SignInForm() {
   const router = useRouter();
 
-  const [isLoading, setLoading] = useState<boolean>(false);
-
   const { isAutoSignIn, setAutoSignIn } = useAppConfigStore();
+  const { isLoading, setLoading } = useAppState();
   const { signIn } = useAuthStore();
 
   const signInForm = useForm<SignInRequestDto>({
@@ -41,8 +40,32 @@ export default function SignInForm() {
 
   const onSubmit: SubmitHandler<SignInRequestDto> = async (req) => {
     setLoading(true);
-    alert(JSON.stringify(req));
-    setLoading(false);
+    const response = await signInAction(req);
+    if (response.code !== 'SU') {
+      setLoading(false);
+
+      switch (response.code) {
+        case 'LGE':
+        case 'VE':
+          setError('root', {
+            message: '아이디 또는 비밀번호가 올바르지 않습니다.',
+          });
+          break;
+
+        default:
+          setError('root', {
+            message: '서버에서 문제가 발생했습니다. 잠시 후 다시 시도해주세요.',
+          });
+      }
+
+      return;
+    }
+
+    const responseData = response.result;
+
+    signIn(responseData);
+
+    router.replace('/');
   };
 
   return (
