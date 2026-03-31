@@ -20,6 +20,7 @@ export default function SignOutButton() {
       await signOutAction();
     } finally {
       signOut();
+      setLoading(false);
       router.replace('/sign-in');
     }
   };

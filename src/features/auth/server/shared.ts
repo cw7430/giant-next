@@ -1,3 +1,5 @@
+'use server';
+
 import { cookies } from 'next/headers';
 
 import { ApiSuccessWithResult } from '@/common/api/schema';
@@ -29,7 +31,7 @@ export const signInAndRefresh = async (
       )
     : undefined;
 
-  const isSecure = process.env.APP_ENV !== 'local';
+  const isSecure = process.env.NEXT_PUBLIC_APP_ENV !== 'local';
 
   cookieStore.set({
     name: 'accessToken',
