@@ -1,4 +1,4 @@
-import { serverFetch, type FetchOptions } from './server-fetch';
+import { serverFetch, type FetchOptions } from './server-fetch.server';
 
 export const apiGet = async <T>(
   url: string,
