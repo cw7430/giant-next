@@ -1,9 +1,12 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 
 export default function NavGroup() {
+  const pathname = usePathname();
+
   return (
     <Navbar bg="black" data-bs-theme="dark" expand="lg">
       <Container>
@@ -19,7 +22,11 @@ export default function NavGroup() {
             <Nav.Link as={Link} href="/">
               매출관리
             </Nav.Link>
-            <Nav.Link as={Link} href="/">
+            <Nav.Link
+              as={Link}
+              href="/hr/profiles"
+              active={pathname.startsWith('/hr')}
+            >
               인사관리
             </Nav.Link>
           </Nav>
