@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 
 import { useAppConfigStore, useAppState } from '@/common/stores';
 import { useAuthStore } from '@/features/auth/stores';
-import { refreshAction, meAction } from '@/features/auth/server';
+import { refreshAction, meAction } from '@/features/auth/server/actions';
 import type { RefreshRequestDto } from '@/features/auth/schema';
 
 export default function AuthInitializer() {

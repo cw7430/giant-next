@@ -8,7 +8,7 @@ import { Button, Form, Spinner } from 'react-bootstrap';
 import { useAppConfigStore, useAppState } from '@/common/stores';
 import { useAuthStore } from '@/features/auth/stores';
 import { SignInRequestDto, signInRequestSchema } from '@/features/auth/schema';
-import { signInAction } from '@/features/auth/server';
+import { signInAction } from '@/features/auth/server/actions';
 
 export default function SignInForm() {
   const router = useRouter();
