@@ -15,7 +15,3 @@ export const zBigIntToString = z
 export const zStringToBigInt = z
   .string()
   .transform((val: string) => BigInt(val));
-
-export const zStringToDate = z.iso
-  .datetime()
-  .transform((val: string) => new Date(val));

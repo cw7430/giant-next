@@ -28,3 +28,7 @@ export const pageResponseSchema = <T extends z.ZodTypeAny>(content: T) =>
   });
 
 export type PageResponseMetaDto = z.infer<typeof pageResponseMetaSchema>;
+
+export type PageResponseDto<T> = z.infer<
+  ReturnType<typeof pageResponseSchema<z.ZodType<T>>>
+>;

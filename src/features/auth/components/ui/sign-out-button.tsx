@@ -5,7 +5,7 @@ import { Button } from 'react-bootstrap';
 
 import { useAppState } from '@/common/stores';
 import { useAuthStore } from '@/features/auth/stores';
-import { signOutAction } from '@/features/auth/server';
+import { signOutAction } from '@/features/auth/server/actions';
 
 export default function SignOutButton() {
   const router = useRouter();
