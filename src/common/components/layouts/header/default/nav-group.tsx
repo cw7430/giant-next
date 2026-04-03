@@ -16,10 +16,18 @@ export default function NavGroup() {
         <Navbar.Toggle aria-controls="header-responsive-navbar" />
         <Navbar.Collapse id="header-responsive-navbar">
           <Nav className="me-auto">
-            <Nav.Link as={Link} href="/">
+            <Nav.Link
+              as={Link}
+              href="/inventory"
+              active={pathname.startsWith('/inventory')}
+            >
               재고관리
             </Nav.Link>
-            <Nav.Link as={Link} href="/">
+            <Nav.Link
+              as={Link}
+              href="/sales"
+              active={pathname.startsWith('/sales')}
+            >
               매출관리
             </Nav.Link>
             <Nav.Link
