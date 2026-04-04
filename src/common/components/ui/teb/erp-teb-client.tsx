@@ -8,7 +8,7 @@ interface Props {
   domain: 'hr' | 'inventory' | 'sales';
 }
 
-export default function ErpTeb({ domain }: Props) {
+export default function ErpTebClient({ domain }: Props) {
   const pathname = usePathname();
 
   const categories = {
