@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation';
 
-import { EmployeeProfileListRequestDto } from '@/features/hr/schema';
 import { getEmployeeProfiles } from '@/features/hr/server/models/profiles';
 import { ErpTeb } from '@/common/components/ui';
 import { ProfilesTable } from '@/features/hr/components/views/profiles';
@@ -10,21 +9,20 @@ interface Props {
 }
 
 export default async function EmployeeProfiles({ searchParams }: Props) {
-  const sParams = await searchParams;
+  const {
+    page = '1',
+    sortPath = 'employee',
+    sortOrder = 'asc',
+  } = await searchParams;
 
-  const page = sParams.page ? Number(sParams.page) : 1;
-  const sortPath =
-    sParams.sortPath === 'position' || sParams.sortPath === 'department'
-      ? sParams.sortPath
-      : 'employee';
-  const sortOrder = sParams.sortPath === 'desc' ? sParams.sortPath : 'asc';
-
-  const params: EmployeeProfileListRequestDto = {
-    page,
+  const params = {
+    page: Number(page) ?? 1,
+    sortPath: (['position', 'department'].includes(sortPath as string)
+      ? sortPath
+      : 'employee') as 'employee' | 'position' | 'department',
+    sortOrder: (sortOrder === 'desc' ? 'desc' : 'asc') as 'desc' | 'asc',
     size: 5,
     blockSize: 5,
-    sortPath,
-    sortOrder,
   };
   const response = await getEmployeeProfiles(params);
 
