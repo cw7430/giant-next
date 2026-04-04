@@ -1,2 +1,2 @@
 export { default as LoadingBar } from './loading-bar';
-export { default as ErpTeb } from './erp-teb';
+export { default as ErpTeb } from './teb/erp-teb';

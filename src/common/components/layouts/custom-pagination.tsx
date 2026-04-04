@@ -1,45 +1,57 @@
 'use client';
 
 import { Pagination } from 'react-bootstrap';
-
 import { PageResponseMetaDto } from '@/common/api/schema';
+import { usePathname, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 interface Props {
   data: PageResponseMetaDto;
-  onPageChange: (page: number) => void;
 }
 
-export default function CustomPagination(props: Props) {
-  const {
-    data: { currentPage, endPage, hasNext, hasPrevious, startPage, totalPages },
-    onPageChange,
-  } = props;
+export default function CustomPagination({ data }: Props) {
+  const { currentPage, endPage, hasNext, hasPrevious, startPage, totalPages } =
+    data;
+
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const createPageUrl = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', page.toString());
+    return `${pathname}?${params.toString()}`;
+  };
 
   return (
     <Pagination>
-      {currentPage !== 1 && (
-        <Pagination.First onClick={() => onPageChange(1)} />
+      {currentPage > 1 && (
+        <Pagination.First as={Link} href={createPageUrl(1)} />
       )}
+
       {hasPrevious && (
-        <Pagination.Prev onClick={() => onPageChange(currentPage - 1)} />
+        <Pagination.Prev as={Link} href={createPageUrl(startPage - 1)} />
       )}
+
       {Array.from({ length: endPage - startPage + 1 }, (_, i) => {
         const page = startPage + i;
         return (
           <Pagination.Item
             key={page}
             active={currentPage === page}
-            onClick={() => onPageChange(page)}
+            as={Link}
+            href={createPageUrl(page)}
           >
             {page}
           </Pagination.Item>
         );
       })}
+
       {hasNext && (
-        <Pagination.Next onClick={() => onPageChange(currentPage + 1)} />
+        <Pagination.Next as={Link} href={createPageUrl(endPage + 1)} />
       )}
-      {endPage !== totalPages && (
-        <Pagination.Last onClick={() => onPageChange(totalPages)} />
+
+      {currentPage < totalPages && (
+        <Pagination.Last as={Link} href={createPageUrl(totalPages)} />
       )}
     </Pagination>
   );

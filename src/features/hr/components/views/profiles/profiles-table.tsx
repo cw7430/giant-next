@@ -1,8 +1,7 @@
-'use client';
-
 import { Col, Container, Row, Table } from 'react-bootstrap';
 
 import { EmployeeProfileListResponseDto } from '@/features/hr/schema';
+import { CustomPagination } from '@/common/components/layouts';
 
 interface Props {
   data: EmployeeProfileListResponseDto;
@@ -10,7 +9,7 @@ interface Props {
 
 export default function ProfilesTable(props: Props) {
   const {
-    data: { content },
+    data: { content, ...pageMeta },
   } = props;
 
   return (
@@ -57,6 +56,11 @@ export default function ProfilesTable(props: Props) {
               ))}
             </tbody>
           </Table>
+        </Col>
+      </Row>
+      <Row className="justify-content-center">
+        <Col md="auto">
+          <CustomPagination data={pageMeta} />
         </Col>
       </Row>
     </Container>
