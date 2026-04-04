@@ -1,0 +1,1 @@
+export { default as ProfilesTable } from './profiles-table';
