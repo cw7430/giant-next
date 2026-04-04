@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Col, Row, Container, Nav } from 'react-bootstrap';
+import { Nav } from 'react-bootstrap';
 
 interface Props {
   domain: 'hr' | 'inventory' | 'sales';
@@ -33,20 +33,14 @@ export default function ErpTeb({ domain }: Props) {
   );
 
   return (
-    <Container>
-      <Row className="justify-content-between">
-        <Col xs={9} className="d-flex">
-          <Nav className="w-100" fill variant="tabs" data-bs-theme="dark">
-            {currentCategories.map(({ idx, title, path }) => (
-              <Nav.Item key={idx}>
-                <Nav.Link as={Link} href={path} active={pathname === path}>
-                  {title}
-                </Nav.Link>
-              </Nav.Item>
-            ))}
-          </Nav>
-        </Col>
-      </Row>
-    </Container>
+    <Nav className="w-100" fill variant="tabs" data-bs-theme="dark">
+      {currentCategories.map(({ idx, title, path }) => (
+        <Nav.Item key={idx}>
+          <Nav.Link as={Link} href={path} active={pathname === path}>
+            {title}
+          </Nav.Link>
+        </Nav.Item>
+      ))}
+    </Nav>
   );
 }
