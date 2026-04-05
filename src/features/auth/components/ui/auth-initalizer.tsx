@@ -3,7 +3,11 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { useAppConfigStore, useAppState } from '@/common/stores';
+import {
+  useAppConfigStore,
+  useAppState,
+  useDialogModalState,
+} from '@/common/stores';
 import { useAuthStore } from '@/features/auth/stores';
 import { refreshAction, meAction } from '@/features/auth/server/actions';
 import type { RefreshRequestDto } from '@/features/auth/schema';
@@ -12,6 +16,7 @@ export default function AuthInitializer() {
   const router = useRouter();
   const { isAutoSignIn } = useAppConfigStore();
   const { setLoading } = useAppState();
+  const { showModal } = useDialogModalState();
   const { signIn, signOut } = useAuthStore();
   const hasHydrated = useAuthStore((s) => s.hasHydrated);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -31,8 +36,14 @@ export default function AuthInitializer() {
         const response = await refreshAction(req);
         if (response.code !== 'SU') {
           signOut();
-          alert('세션이 만료되었습니다.');
-          router.replace('/sign-in');
+          showModal({
+            modal: 'alert',
+            title: '세션만료',
+            text: '세션이 만료되었습니다. 로그아웃합니다.',
+            handleAfterClose: () => {
+              router.replace('/sign-in');
+            },
+          });
           return null;
         }
 
@@ -44,7 +55,7 @@ export default function AuthInitializer() {
         if (isRecovery) setLoading(false);
       }
     },
-    [router, signIn, signOut, setLoading],
+    [router, signIn, signOut, setLoading, showModal],
   );
 
   const scheduleRefresh = useCallback(
