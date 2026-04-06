@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './globals.css';
-import { LoadingBar } from '@/common/components/ui';
+import { DialogModal, LoadingBar } from '@/common/components/ui';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -35,6 +35,7 @@ export default function RootLayout({
     >
       <body>
         <LoadingBar />
+        <DialogModal />
         {children}
       </body>
     </html>
