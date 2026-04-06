@@ -2,6 +2,7 @@ import { Col, Container, Row, Table } from 'react-bootstrap';
 
 import { EmployeeProfileListResponseDto } from '@/features/hr/schema';
 import { CustomPagination } from '@/common/components/layouts';
+import ProfilesTableRows from './profiles-table-rows';
 
 interface Props {
   data: EmployeeProfileListResponseDto;
@@ -44,15 +45,7 @@ export default function ProfilesTable(props: Props) {
             </thead>
             <tbody>
               {content.map((profile) => (
-                <tr key={profile.employeeId} style={{ cursor: 'pointer' }}>
-                  <td>{profile.employeeCode}</td>
-                  <td>{profile.employeeName}</td>
-                  <td>{profile.phoneNumber}</td>
-                  <td>{profile.departmentName}</td>
-                  <td>{profile.positionName}</td>
-                  <td>{profile.createdAt.toLocaleDateString()}</td>
-                  <td>{profile.updatedAt.toLocaleDateString()}</td>
-                </tr>
+                <ProfilesTableRows profile={profile} key={profile.employeeId} />
               ))}
             </tbody>
           </Table>
