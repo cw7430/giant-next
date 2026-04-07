@@ -1,7 +1,5 @@
 'use server';
 
-import { cookies } from 'next/headers';
-
 import {
   ApiError,
   apiPost,
@@ -26,14 +24,3 @@ export const refreshAction = async (body: RefreshRequestDto) =>
 
     return signInAndRefresh(response);
   });
-
-export const meAction = async () => {
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get('accessToken')?.value;
-
-  if (!accessToken) {
-    return false;
-  }
-
-  return true;
-};
