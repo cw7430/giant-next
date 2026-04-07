@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 
 import { DefaultHeader, DefaultFooter } from '@/common/components/layouts';
 import { AuthInitializer } from '@/features/auth/components/ui';
+import { me } from '@/features/auth/server/models';
 
 export default async function DefaultLayout({
   children,
@@ -15,9 +16,11 @@ export default async function DefaultLayout({
     redirect('/sign-in', 'replace');
   }
 
+  const checkAccessToken = await me();
+
   return (
     <>
-      <AuthInitializer />
+      <AuthInitializer checkAccessToken={checkAccessToken} />
       <div className="bg-light text-dark">
         <DefaultHeader />
         {children}

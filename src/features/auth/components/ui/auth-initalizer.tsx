@@ -9,10 +9,14 @@ import {
   useDialogModalState,
 } from '@/common/stores';
 import { useAuthStore } from '@/features/auth/stores';
-import { refreshAction, meAction } from '@/features/auth/server/actions';
+import { refreshAction } from '@/features/auth/server/actions';
 import type { RefreshRequestDto } from '@/features/auth/schema';
 
-export default function AuthInitializer() {
+interface Props {
+  checkAccessToken: boolean;
+}
+
+export default function AuthInitializer({ checkAccessToken }: Props) {
   const router = useRouter();
   const { isAutoSignIn } = useAppConfigStore();
   const { setLoading } = useAppState();
@@ -79,9 +83,7 @@ export default function AuthInitializer() {
       const currentExpiry = currentState.accessTokenExpiresAtMs;
       const isAuthValid = currentState.checkAuth();
 
-      const me = await meAction();
-
-      if (me && isAuthValid && currentExpiry) {
+      if (checkAccessToken && isAuthValid && currentExpiry) {
         scheduleRefresh(currentExpiry, req);
         return;
       }
@@ -91,7 +93,7 @@ export default function AuthInitializer() {
         scheduleRefresh(newExpiresAt, req);
       }
     },
-    [scheduleRefresh, refresh],
+    [scheduleRefresh, refresh, checkAccessToken],
   );
 
   useEffect(() => {
