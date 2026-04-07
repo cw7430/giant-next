@@ -33,9 +33,7 @@ export default async function EmployeeProfiles({ searchParams }: Props) {
   return (
     <>
       <ErpTeb domain="hr" />
-      <ProfilesTable
-        data={response.result}
-      />
+      <ProfilesTable data={response.result} params={params} />
     </>
   );
 }

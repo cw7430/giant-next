@@ -1,0 +1,20 @@
+.sort-icon {
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  stroke: #808080;
+}
+
+.active {
+  stroke: #ffffff !important;
+}
+
+.sort-icon:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  stroke: #cccccc;
+}
+
+.active:hover {
+  background-color: transparent;
+  cursor: default;
+}
