@@ -1,15 +1,22 @@
 import { Col, Container, Row, Table } from 'react-bootstrap';
 
-import { EmployeeProfileListResponseDto } from '@/features/hr/schema';
+import {
+  EmployeeProfileListRequestDto,
+  EmployeeProfileListResponseDto,
+} from '@/features/hr/schema';
 import { CustomPagination } from '@/common/components/layouts';
+import { SortChevron } from '@/common/components/ui';
+import ProfilesTableRows from './profiles-table-rows';
 
 interface Props {
   data: EmployeeProfileListResponseDto;
+  params: EmployeeProfileListRequestDto;
 }
 
 export default function ProfilesTable(props: Props) {
   const {
     data: { content, ...pageMeta },
+    params,
   } = props;
 
   return (
@@ -21,6 +28,11 @@ export default function ProfilesTable(props: Props) {
               <tr>
                 <th className="text-center" style={{ width: '10%' }}>
                   사번
+                  <SortChevron
+                    sortOrderParam={params.sortOrder}
+                    sortPathParam={params.sortPath}
+                    sortPath="employee"
+                  />
                 </th>
                 <th className="text-center" style={{ width: '11%' }}>
                   이름
@@ -30,9 +42,19 @@ export default function ProfilesTable(props: Props) {
                 </th>
                 <th className="text-center" style={{ width: '15%' }}>
                   부서
+                  <SortChevron
+                    sortOrderParam={params.sortOrder}
+                    sortPathParam={params.sortPath}
+                    sortPath="department"
+                  />
                 </th>
                 <th className="text-center" style={{ width: '10%' }}>
                   직급
+                  <SortChevron
+                    sortOrderParam={params.sortOrder}
+                    sortPathParam={params.sortPath}
+                    sortPath="position"
+                  />
                 </th>
                 <th className="text-center" style={{ width: '15%' }}>
                   등록일
@@ -44,15 +66,7 @@ export default function ProfilesTable(props: Props) {
             </thead>
             <tbody>
               {content.map((profile) => (
-                <tr key={profile.employeeId} style={{ cursor: 'pointer' }}>
-                  <td>{profile.employeeCode}</td>
-                  <td>{profile.employeeName}</td>
-                  <td>{profile.phoneNumber}</td>
-                  <td>{profile.departmentName}</td>
-                  <td>{profile.positionName}</td>
-                  <td>{profile.createdAt.toLocaleDateString()}</td>
-                  <td>{profile.updatedAt.toLocaleDateString()}</td>
-                </tr>
+                <ProfilesTableRows profile={profile} key={profile.employeeId} />
               ))}
             </tbody>
           </Table>
