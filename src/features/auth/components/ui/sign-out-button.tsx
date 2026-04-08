@@ -1,28 +1,31 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
 import { Button } from 'react-bootstrap';
 
-import { useAppState } from '@/common/stores';
 import { useAuthStore } from '@/features/auth/stores';
 import { signOutAction } from '@/features/auth/server/actions';
 
 export default function SignOutButton() {
   const router = useRouter();
 
-  const { isLoading, setLoading } = useAppState();
-
   const { signOut } = useAuthStore();
 
-  const onClick = async () => {
-    setLoading(true);
-    try {
-      await signOutAction();
-    } finally {
+  const mutation = useMutation({
+    mutationFn: signOutAction,
+    onSuccess: () => {
       signOut();
-      setLoading(false);
       router.replace('/sign-in');
-    }
+    },
+    onError: () => {
+      signOut();
+      router.replace('/sign-in');
+    },
+  });
+
+  const onClick = async () => {
+    mutation.mutate();
   };
 
   return (
@@ -30,7 +33,7 @@ export default function SignOutButton() {
       variant="outline-light"
       type="button"
       onClick={onClick}
-      disabled={isLoading}
+      disabled={mutation.isPending}
     >
       로그아웃
     </Button>
