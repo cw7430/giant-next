@@ -1,16 +1,18 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useIsFetching, useIsMutating } from '@tanstack/react-query';
 import {
   AppProgressBar as ProgressBar,
   startProgress,
   stopProgress,
 } from 'next-nprogress-bar';
 
-import { useAppState } from '@/common/stores';
-
 export default function LoadingBar() {
-  const isLoading = useAppState((state) => state.isLoading);
+  const isFetching = useIsFetching();
+  const isMutating = useIsMutating();
+
+  const isLoading = isFetching + isMutating > 0;
 
   useEffect(() => {
     if (isLoading) {

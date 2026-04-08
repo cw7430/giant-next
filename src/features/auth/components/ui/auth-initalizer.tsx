@@ -2,12 +2,9 @@
 
 import { useCallback, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
 
-import {
-  useAppConfigStore,
-  useAppState,
-  useDialogModalState,
-} from '@/common/stores';
+import { useAppConfigStore, useDialogModalState } from '@/common/stores';
 import { useAuthStore } from '@/features/auth/stores';
 import { refreshAction } from '@/features/auth/server/actions';
 import type { RefreshRequestDto } from '@/features/auth/schema';
@@ -19,11 +16,17 @@ interface Props {
 export default function AuthInitializer({ checkAccessToken }: Props) {
   const router = useRouter();
   const { isAutoSignIn } = useAppConfigStore();
-  const { setLoading } = useAppState();
   const { showModal } = useDialogModalState();
   const { signIn, signOut } = useAuthStore();
   const hasHydrated = useAuthStore((s) => s.hasHydrated);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const refreshMutation = useMutation({
+    mutationKey: ['auth', 'refresh'],
+    mutationFn: async (req: RefreshRequestDto) => {
+      return await refreshAction(req);
+    },
+  });
 
   const clearRefreshTimer = useCallback(() => {
     if (timerRef.current) {
@@ -34,10 +37,8 @@ export default function AuthInitializer({ checkAccessToken }: Props) {
 
   const refresh = useCallback(
     async (req: RefreshRequestDto, isRecovery: boolean = false) => {
-      if (isRecovery) setLoading(true);
-
       try {
-        const response = await refreshAction(req);
+        const response = await refreshMutation.mutateAsync(req);
         if (response.code !== 'SU') {
           signOut();
           showModal({
@@ -55,11 +56,20 @@ export default function AuthInitializer({ checkAccessToken }: Props) {
         signIn(data);
 
         return data.accessTokenExpiresAtMs;
-      } finally {
-        if (isRecovery) setLoading(false);
+      } catch {
+        signOut();
+        showModal({
+          modal: 'alert',
+          title: '세션만료',
+          text: '세션이 만료되었습니다. 로그아웃합니다.',
+          handleAfterClose: () => {
+            router.replace('/sign-in');
+          },
+        });
+        return null;
       }
     },
-    [router, signIn, signOut, setLoading, showModal],
+    [router, signIn, signOut, showModal],
   );
 
   const scheduleRefresh = useCallback(
