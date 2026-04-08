@@ -13,6 +13,7 @@ export default function SignOutButton() {
   const { signOut } = useAuthStore();
 
   const mutation = useMutation({
+    mutationKey: ['auth', 'sign-out'],
     mutationFn: signOutAction,
     onSuccess: () => {
       signOut();

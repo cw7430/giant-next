@@ -40,6 +40,7 @@ export default function SignInForm() {
   };
 
   const mutation = useMutation({
+    mutationKey: ['auth', 'sign-in'],
     mutationFn: signInAction,
     onSuccess: (res) => {
       if (res.code !== 'SU') {

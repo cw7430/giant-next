@@ -15,15 +15,10 @@ export const useAppConfigStore = create<AppConfigState>()(
   persist(
     (set) => ({
       isAutoSignIn: false,
-      setAutoSignIn: (isAutoSignIn: boolean) => set({ isAutoSignIn })
+      setAutoSignIn: (isAutoSignIn: boolean) => set({ isAutoSignIn }),
     }),
     {
       name: 'app-config-storage',
     },
   ),
 );
-
-export const useAppState = create<AppState>()((set) => ({
-  isLoading: false,
-  setLoading: (isLoading: boolean) => set({ isLoading }),
-}));
