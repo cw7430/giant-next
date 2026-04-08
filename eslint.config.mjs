@@ -1,6 +1,7 @@
 import { defineConfig, globalIgnores } from 'eslint/config';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import nextTs from 'eslint-config-next/typescript';
+import tanstackQuery from '@tanstack/eslint-plugin-query';
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -14,6 +15,7 @@ const eslintConfig = defineConfig([
     'next-env.d.ts',
   ]),
   {
+    extends: [tanstackQuery],
     rules: {
       '@typescript-eslint/no-unused-vars': [
         'error',
