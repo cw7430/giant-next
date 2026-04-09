@@ -1,4 +1,5 @@
 'use client';
+import { useRouter } from 'next/navigation';
 
 import { EmployeeProfileResponseDto } from '@/features/hr/schema';
 
@@ -7,8 +8,10 @@ interface Props {
 }
 
 export default function ProfilesTableRows({ profile }: Props) {
+  const router = useRouter();
+
   const onClick = () => {
-    alert(profile.employeeId);
+    router.push(`profiles/${profile.employeeId}`);
   };
 
   return (

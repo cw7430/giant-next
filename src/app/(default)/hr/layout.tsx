@@ -1,9 +1,0 @@
-import { ErpLayout } from '@/common/components/layouts';
-
-export default function HrLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return <ErpLayout title="인사관리">{children}</ErpLayout>;
-}
