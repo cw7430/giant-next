@@ -3,7 +3,6 @@ import { redirect } from 'next/navigation';
 import { getEmployeeProfiles } from '@/features/hr/server/models/profiles';
 import { ErpTeb } from '@/common/components/ui';
 import { ProfilesTable } from '@/features/hr/components/views/profiles';
-import { ProfileModal } from '@/features/hr/components/ui';
 
 interface Props {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -35,7 +34,6 @@ export default async function EmployeeProfiles({ searchParams }: Props) {
     <>
       <ErpTeb domain="hr" />
       <ProfilesTable data={response.result} params={params} />
-      <ProfileModal />
     </>
   );
 }
