@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
@@ -13,9 +13,12 @@ import { signInAction } from '@/features/auth/server/actions';
 
 export default function SignInForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const { isAutoSignIn, setAutoSignIn } = useAppConfigStore();
   const { signIn } = useAuthStore();
+
+  const redirectTo = searchParams.get('redirect') || '/';
 
   const signInForm = useForm<SignInRequestDto>({
     mode: 'onBlur',
@@ -62,7 +65,7 @@ export default function SignInForm() {
       }
 
       signIn(res.result);
-      router.replace('/');
+      router.replace(redirectTo);
     },
     onError: () => {
       setError('root', {
