@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { Button } from 'react-bootstrap';
 
@@ -9,19 +9,16 @@ import { signOutAction } from '@/features/auth/server/actions';
 
 export default function SignOutButton() {
   const router = useRouter();
+  const pathname = usePathname();
 
   const { signOut } = useAuthStore();
 
   const mutation = useMutation({
     mutationKey: ['auth', 'sign-out'],
     mutationFn: signOutAction,
-    onSuccess: () => {
+    onSettled: () => {
       signOut();
-      router.replace('/sign-in');
-    },
-    onError: () => {
-      signOut();
-      router.replace('/sign-in');
+      router.replace(`/sign-in?redirect=${encodeURIComponent(pathname)}`);
     },
   });
 
