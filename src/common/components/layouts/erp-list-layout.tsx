@@ -3,7 +3,7 @@ interface Props {
   title: string;
 }
 
-export default function ErpLayout({ children, title }: Readonly<Props>) {
+export default function ErpListLayout({ children, title }: Readonly<Props>) {
   return (
     <div className="d-flex flex-column min-vh-100 p-3">
       <div className="my-5">
