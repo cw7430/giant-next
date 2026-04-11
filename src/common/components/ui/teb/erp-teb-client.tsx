@@ -19,7 +19,7 @@ export default function ErpTebClient({ domain }: Props) {
     ],
     inventory: [
       { idx: 1, title: '재고관리', path: '/inventory/stock' },
-      { idx: 2, title: '생산관리', path: '/inventory/product' },
+      { idx: 2, title: '생산관리', path: '/inventory/products' },
       { idx: 3, title: '입출고관리', path: '/inventory/movements' },
     ],
     sales: [

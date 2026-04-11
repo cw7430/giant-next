@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { Col, Container, Row } from 'react-bootstrap';
 
 import { getEmployeeProfile } from '@/features/hr/server/models/profiles';
-import { ProfileModal } from '@/features/hr/components/ui';
+import { UpdateProfileModal } from '@/features/hr/components/ui';
 import { ShowProfileModalButton } from '@/features/hr/components/views/profiles/detail';
 
 interface Props {
@@ -74,7 +74,7 @@ export default async function EmployeeProfile({ params }: Props) {
           </Row>
         </Container>
       </div>
-      <ProfileModal data={response.result} />
+      <UpdateProfileModal data={response.result} />
     </>
   );
 }

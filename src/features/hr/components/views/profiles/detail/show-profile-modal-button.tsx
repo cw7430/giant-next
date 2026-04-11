@@ -1,18 +1,13 @@
 'use client';
 
-import { useShallow } from 'zustand/shallow';
 import { Button } from 'react-bootstrap';
 
 import { useAuthStore } from '@/features/auth/stores';
 import { useModalState } from '@/common/stores';
 
 export default function ShowProfileModalButton() {
-  const { team } = useAuthStore(
-    useShallow((s) => ({ team: s.team, employeeRole: s.employeeRole })),
-  );
-  const { showModal } = useModalState(
-    useShallow((s) => ({ showModal: s.showModal })),
-  );
+  const team = useAuthStore((s) => s.team);
+  const showModal = useModalState((s) => s.showModal);
 
   const isPermitted = team === 'TM100' || team === 'TM200';
 

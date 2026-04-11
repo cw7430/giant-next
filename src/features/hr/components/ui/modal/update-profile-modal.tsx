@@ -11,15 +11,14 @@ interface Props {
   data: EmployeeProfileResponseDto;
 }
 
-export default function ProfileModal({ data }: Props) {
+export default function UpdateProfileModal({ data }: Props) {
   const { modals, closeModal } = useModalState(
     useShallow((s) => ({ modals: s.modals, closeModal: s.closeModal })),
   );
-  const { team, employeeRole } = useAuthStore(
-    useShallow((s) => ({ team: s.team, employeeRole: s.employeeRole })),
-  );
+  const team = useAuthStore((s) => s.team);
 
   const isOpen = modals.includes('profile');
+  const isPermitted = team === 'TM100' || team === 'TM200';
 
   return (
     <Modal
@@ -29,8 +28,14 @@ export default function ProfileModal({ data }: Props) {
     >
       <Modal.Header closeButton>사원 정보</Modal.Header>
       <Modal.Body>
-        <div>{team}</div>
-        <div>{employeeRole}</div>
+        <p>{data.employeeCode}</p>
+        <p>{data.employeeName}</p>
+        <p>{data.positionName}</p>
+        <p>{data.phoneNumber}</p>
+        <p>{data.email}</p>
+        <p>{data.departmentName}</p>
+        <p>{data.teamName}</p>
+        <p>{data.employeeRole}</p>
       </Modal.Body>
     </Modal>
   );
