@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { useShallow } from 'zustand/shallow';
 import { Button, Form, Spinner } from 'react-bootstrap';
 
 import { useAppConfigStore } from '@/common/stores';
@@ -15,8 +16,13 @@ export default function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const { isAutoSignIn, setAutoSignIn } = useAppConfigStore();
-  const { signIn } = useAuthStore();
+  const { isAutoSignIn, setAutoSignIn } = useAppConfigStore(
+    useShallow((s) => ({
+      isAutoSignIn: s.isAutoSignIn,
+      setAutoSignIn: s.setAutoSignIn,
+    })),
+  );
+  const signIn = useAuthStore((s) => s.signIn);
 
   const redirectTo = searchParams.get('redirect') || '/';
 

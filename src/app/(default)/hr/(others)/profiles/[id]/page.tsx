@@ -2,7 +2,8 @@ import { redirect } from 'next/navigation';
 import { Col, Container, Row } from 'react-bootstrap';
 
 import { getEmployeeProfile } from '@/features/hr/server/models/profiles';
-import { ProfileModal } from '@/features/hr/components/ui';
+import { UpdateProfileModal } from '@/features/hr/components/ui';
+import { ShowProfileModalButton } from '@/features/hr/components/views/profiles/detail';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -66,9 +67,14 @@ export default async function EmployeeProfile({ params }: Props) {
               </div>
             </Col>
           </Row>
+          <Row className="justify-content-center">
+            <Col xs="auto">
+              <ShowProfileModalButton />
+            </Col>
+          </Row>
         </Container>
       </div>
-      <ProfileModal />
+      <UpdateProfileModal data={response.result} />
     </>
   );
 }

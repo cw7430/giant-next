@@ -1,12 +1,15 @@
 'use client';
 
 import { useEffect, useCallback } from 'react';
+import { useShallow } from 'zustand/shallow';
 import { Button, Modal } from 'react-bootstrap';
 
 import { useDialogModalState } from '@/common/stores';
 
 export default function DialogModal() {
-  const { config, closeModal } = useDialogModalState();
+  const { config, closeModal } = useDialogModalState(
+    useShallow((s) => ({ config: s.config, closeModal: s.closeModal })),
+  );
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {

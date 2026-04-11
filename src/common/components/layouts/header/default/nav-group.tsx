@@ -18,14 +18,14 @@ export default function NavGroup() {
           <Nav className="me-auto">
             <Nav.Link
               as={Link}
-              href="/inventory/products"
+              href="/inventory/stock"
               active={pathname.startsWith('/inventory')}
             >
               재고관리
             </Nav.Link>
             <Nav.Link
               as={Link}
-              href="/sales/records"
+              href="/sales/payments"
               active={pathname.startsWith('/sales')}
             >
               매출관리

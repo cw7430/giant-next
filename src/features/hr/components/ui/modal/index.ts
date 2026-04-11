@@ -1,1 +1,1 @@
-export { default as ProfileModal } from './profile-modal';
+export { default as UpdateProfileModal } from './update-profile-modal';
