@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
+import { useShallow } from 'zustand/shallow';
 
 import { useAppConfigStore, useDialogModalState } from '@/common/stores';
 import { useAuthStore } from '@/features/auth/stores';
@@ -16,10 +17,15 @@ interface Props {
 export default function AuthInitializer({ checkAccessToken }: Props) {
   const router = useRouter();
   const pathname = usePathname();
-  const { isAutoSignIn } = useAppConfigStore();
-  const { showModal } = useDialogModalState();
-  const { signIn, signOut } = useAuthStore();
-  const hasHydrated = useAuthStore((s) => s.hasHydrated);
+  const isAutoSignIn = useAppConfigStore((s) => s.isAutoSignIn);
+  const showModal = useDialogModalState((s) => s.showModal);
+  const { signOut, signIn, hasHydrated } = useAuthStore(
+    useShallow((s) => ({
+      signOut: s.signOut,
+      signIn: s.signIn,
+      hasHydrated: s.hasHydrated,
+    })),
+  );
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const clearRefreshTimer = useCallback(() => {

@@ -11,7 +11,7 @@ export default function SignOutButton() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { signOut } = useAuthStore();
+  const signOut = useAuthStore((s) => s.signOut);
 
   const mutation = useMutation({
     mutationKey: ['auth', 'sign-out'],

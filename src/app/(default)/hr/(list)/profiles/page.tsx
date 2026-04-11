@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 
 import { getEmployeeProfiles } from '@/features/hr/server/models/profiles';
 import { ErpTeb } from '@/common/components/ui';
-import { ProfilesTable } from '@/features/hr/components/views/profiles';
+import { ProfilesTable } from '@/features/hr/components/views/profiles/list';
 
 interface Props {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

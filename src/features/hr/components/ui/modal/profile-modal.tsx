@@ -1,13 +1,23 @@
 'use client';
 
+import { useShallow } from 'zustand/shallow';
 import { Button, Modal } from 'react-bootstrap';
 
 import { useModalState } from '@/common/stores';
 import { useAuthStore } from '@/features/auth/stores';
+import { EmployeeProfileResponseDto } from '@/features/hr/schema';
 
-export default function ProfileModal() {
-  const { modals, closeModal } = useModalState();
-  const { team, employeeRole } = useAuthStore();
+interface Props {
+  data: EmployeeProfileResponseDto;
+}
+
+export default function ProfileModal({ data }: Props) {
+  const { modals, closeModal } = useModalState(
+    useShallow((s) => ({ modals: s.modals, closeModal: s.closeModal })),
+  );
+  const { team, employeeRole } = useAuthStore(
+    useShallow((s) => ({ team: s.team, employeeRole: s.employeeRole })),
+  );
 
   const isOpen = modals.includes('profile');
 
