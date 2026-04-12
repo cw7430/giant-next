@@ -6,11 +6,13 @@ const teamResponseSchema = z.object({
   teamName: z.string(),
 });
 
-export const departmentResponseSchema = z.object({
+const departmentResponseSchema = z.object({
   departmentId: z.string(),
   departmentCode: z.string(),
-  departmentame: z.string(),
+  departmentName: z.string(),
   teams: z.array(teamResponseSchema),
 });
 
-export type DepartmentResponseDto = z.infer<typeof departmentResponseSchema>;
+export const departmentsResponseSchema = z.array(departmentResponseSchema)
+
+export type DepartmentsResponseDto = z.infer<typeof departmentsResponseSchema>;

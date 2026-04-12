@@ -6,19 +6,17 @@ import { Button, Modal } from 'react-bootstrap';
 import { useModalState } from '@/common/stores';
 import { useAuthStore } from '@/features/auth/stores';
 import {
-  EmployeeProfileResponseDto,
   DepartmentsResponseDto,
   PositionsResponseDto,
 } from '@/features/hr/schema';
 
 interface Props {
   modalKey: string;
-  profiles: EmployeeProfileResponseDto;
   departments: DepartmentsResponseDto;
   positions: PositionsResponseDto;
 }
 
-export default function UpdateProfileModal({ modalKey, profiles }: Props) {
+export default function CreateProfileModal({ modalKey }: Props) {
   const { modals, closeModal } = useModalState(
     useShallow((s) => ({ modals: s.modals, closeModal: s.closeModal })),
   );
@@ -33,17 +31,8 @@ export default function UpdateProfileModal({ modalKey, profiles }: Props) {
       show={!!isOpen}
       onHide={() => closeModal(modalKey)}
     >
-      <Modal.Header closeButton>사원 정보 수정</Modal.Header>
-      <Modal.Body>
-        <p>{profiles.employeeCode}</p>
-        <p>{profiles.employeeName}</p>
-        <p>{profiles.positionName}</p>
-        <p>{profiles.phoneNumber}</p>
-        <p>{profiles.email}</p>
-        <p>{profiles.departmentName}</p>
-        <p>{profiles.teamName}</p>
-        <p>{profiles.employeeRole}</p>
-      </Modal.Body>
+      <Modal.Header closeButton>사원 등록</Modal.Header>
+      <Modal.Body></Modal.Body>
     </Modal>
   );
 }
