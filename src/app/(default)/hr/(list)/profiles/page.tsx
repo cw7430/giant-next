@@ -1,8 +1,13 @@
 import { redirect } from 'next/navigation';
 
-import { getEmployeeProfiles } from '@/features/hr/server/models/profiles';
+import {
+  getEmployeeProfiles,
+  getDepartments,
+  getPositions,
+} from '@/features/hr/server/models/profiles';
 import { ErpTeb } from '@/common/components/ui';
 import { ProfilesTable } from '@/features/hr/components/views/profiles/list';
+import { CreateProfileModal } from '@/features/hr/components/ui';
 
 interface Props {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -24,16 +29,27 @@ export default async function EmployeeProfiles({ searchParams }: Props) {
     size: 5,
     blockSize: 5,
   };
-  const response = await getEmployeeProfiles(params);
+  const profiles = await getEmployeeProfiles(params);
+  const departments = await getDepartments();
+  const positions = await getPositions();
 
-  if (response.code != 'SU') {
+  if (
+    profiles.code != 'SU' ||
+    departments.code != 'SU' ||
+    positions.code != 'SU'
+  ) {
     redirect('/', 'push');
   }
 
   return (
     <>
       <ErpTeb domain="hr" />
-      <ProfilesTable data={response.result} params={params} />
+      <ProfilesTable data={profiles.result} params={params} />
+      <CreateProfileModal
+        modalKey="CreateProfile"
+        departments={departments.result}
+        positions={positions.result}
+      />
     </>
   );
 }

@@ -1,7 +1,11 @@
 import { redirect } from 'next/navigation';
 import { Col, Container, Row } from 'react-bootstrap';
 
-import { getEmployeeProfile } from '@/features/hr/server/models/profiles';
+import {
+  getEmployeeProfile,
+  getDepartments,
+  getPositions,
+} from '@/features/hr/server/models/profiles';
 import { UpdateProfileModal } from '@/features/hr/components/ui';
 import { ShowProfileModalButton } from '@/features/hr/components/views/profiles/detail';
 
@@ -12,10 +16,15 @@ interface Props {
 export default async function EmployeeProfile({ params }: Props) {
   const { id } = await params;
 
-  const response = await getEmployeeProfile(id);
+  const profile = await getEmployeeProfile(id);
+  const departments = await getDepartments();
+  const positions = await getPositions();
 
-  if (response.code != 'SU') {
-    console.log(response.code);
+  if (
+    profile.code != 'SU' ||
+    departments.code != 'SU' ||
+    positions.code != 'SU'
+  ) {
     redirect('/', 'push');
   }
 
@@ -26,7 +35,7 @@ export default async function EmployeeProfile({ params }: Props) {
     departmentName,
     teamName,
     phoneNumber,
-  } = response.result;
+  } = profile.result;
 
   return (
     <>
@@ -74,7 +83,12 @@ export default async function EmployeeProfile({ params }: Props) {
           </Row>
         </Container>
       </div>
-      <UpdateProfileModal data={response.result} />
+      <UpdateProfileModal
+        modalKey="UpdateProfile"
+        profiles={profile.result}
+        departments={departments.result}
+        positions={positions.result}
+      />
     </>
   );
 }
