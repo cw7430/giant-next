@@ -1,1 +1,2 @@
-export { default as ProfilesTable } from './profiles-table';
+export * from './table';
+export * from './teb';

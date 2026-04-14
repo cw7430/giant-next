@@ -5,8 +5,10 @@ import {
   getDepartments,
   getPositions,
 } from '@/features/hr/server/models/profiles';
-import { ErpTeb } from '@/common/components/ui';
-import { ProfilesTable } from '@/features/hr/components/views/profiles/list';
+import {
+  ProfilesTable,
+  ProfilesTeb,
+} from '@/features/hr/components/views/profiles/list';
 import { CreateProfileModal } from '@/features/hr/components/ui';
 
 interface Props {
@@ -41,12 +43,14 @@ export default async function EmployeeProfiles({ searchParams }: Props) {
     redirect('/', 'push');
   }
 
+  const modalKey = 'CreateProfile';
+
   return (
     <>
-      <ErpTeb domain="hr" />
+      <ProfilesTeb modalKey={modalKey} />
       <ProfilesTable data={profiles.result} params={params} />
       <CreateProfileModal
-        modalKey="CreateProfile"
+        modalKey={modalKey}
         departments={departments.result}
         positions={positions.result}
       />
