@@ -8,6 +8,7 @@ import {
 } from '@/features/hr/server/models/profiles';
 import { UpdateProfileModal } from '@/features/hr/components/ui';
 import { ShowProfileModalButton } from '@/features/hr/components/views/profiles/detail';
+import NavProfileListButton from '@/features/hr/components/views/profiles/detail/nav-profile-list-button';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -78,7 +79,8 @@ export default async function EmployeeProfile({ params }: Props) {
           </Row>
           <Row className="justify-content-center">
             <Col xs="auto">
-              <ShowProfileModalButton />
+              <ShowProfileModalButton modalKey="UpdateProfile" />
+              <NavProfileListButton />
             </Col>
           </Row>
         </Container>
