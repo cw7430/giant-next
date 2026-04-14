@@ -24,7 +24,9 @@ export default function SignInForm() {
   );
   const signIn = useAuthStore((s) => s.signIn);
 
-  const redirectTo = searchParams.get('redirect') || '/';
+  const redirect = searchParams.get('redirect');
+
+  const redirectTo = redirect && redirect.startsWith('/') ? redirect : '/';
 
   const signInForm = useForm<SignInRequestDto>({
     mode: 'onBlur',
