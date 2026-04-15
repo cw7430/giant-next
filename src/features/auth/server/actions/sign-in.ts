@@ -5,7 +5,7 @@ import {
   apiPost,
   ApiError,
 } from '@/common/api/configs';
-import { type ApiSuccessWithResult } from '@/common/api/schema';
+import type { ApiSuccessWithResult } from '@/common/api/schema';
 import {
   type SignInRequestDto,
   type SignInAndRefreshResponseDtoForServer,

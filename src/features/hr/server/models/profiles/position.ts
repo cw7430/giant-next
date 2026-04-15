@@ -3,9 +3,9 @@ import {
   apiGet,
   clientResponseWithResult,
 } from '@/common/api/configs';
-import { ApiSuccessWithResult } from '@/common/api/schema';
+import type { ApiSuccessWithResult } from '@/common/api/schema';
 import {
-  PositionsResponseDto,
+  type PositionsResponseDto,
   positionsResponseSchema,
 } from '@/features/hr/schema';
 

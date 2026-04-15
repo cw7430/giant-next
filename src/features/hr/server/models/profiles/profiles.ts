@@ -3,11 +3,11 @@ import {
   apiGet,
   clientResponseWithResult,
 } from '@/common/api/configs';
-import { ApiSuccessWithResult } from '@/common/api/schema';
+import type { ApiSuccessWithResult } from '@/common/api/schema';
 import {
-  EmployeeProfileListRequestDto,
-  EmployeeProfileListResponseDto,
-  EmployeeProfileResponseDto,
+  type EmployeeProfileListRequestDto,
+  type EmployeeProfileListResponseDto,
+  type EmployeeProfileResponseDto,
   employeeProfileListResponseSchema,
   employeeProfileResponseSchema,
 } from '@/features/hr/schema';

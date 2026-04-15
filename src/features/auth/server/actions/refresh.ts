@@ -5,9 +5,9 @@ import {
   apiPost,
   clientResponseWithResult,
 } from '@/common/api/configs';
-import { ApiSuccessWithResult } from '@/common/api/schema';
+import type { ApiSuccessWithResult } from '@/common/api/schema';
 import {
-  RefreshRequestDto,
+  type RefreshRequestDto,
   SignInAndRefreshResponseDtoForServer,
 } from '@/features/auth/schema';
 import { signInAndRefresh } from './shared';
