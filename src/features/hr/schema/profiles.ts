@@ -9,6 +9,7 @@ export const employeeProfileListRequestSchema = pageRequestSchema([
 ] as const);
 
 export const createEmployeeProfileSchema = z.object({
+  employeeCode: z.string().min(1, '사번을 생성해주세요.'),
   employeeName: z.string().min(1, '사원 이름을 입력해주세요.'),
   phoneNumber: z
     .string()
@@ -21,9 +22,12 @@ export const createEmployeeProfileSchema = z.object({
     .string()
     .min(1, '이메일 입력해주세요.')
     .pipe(z.email('이메일 형식이 올바르지 않습니다.')),
-  positionCode: z.string().regex(/^PSN\d{2,3}$/),
-  teamCode: z.string().regex(/^TM\d{3}$/),
-  employeeRole: z.enum(['DEPARTMENT_CHIEF', 'TEAM_CHIEF', 'EMPLOYEE']),
+  positionCode: z.string().regex(/^PSN\d{2,3}$/, '직급을 선택해주세요.'),
+  teamCode: z.string().regex(/^TM\d{3}$/, '부서와 팀을 선택해주세요.'),
+  employeeRole: z.enum(
+    ['DEPARTMENT_CHIEF', 'TEAM_CHIEF', 'EMPLOYEE'],
+    '직책을 선택해주세요.',
+  ),
 });
 
 export const updateEmployeeProfileSchema = z.object({
@@ -34,9 +38,12 @@ export const updateEmployeeProfileSchema = z.object({
     .nullable(),
 });
 
-export const employeeProfileResponseSchema = z.object({
-  employeeId: z.string(),
+export const employeeCodeResponseSchema = z.object({
   employeeCode: z.string(),
+});
+
+export const employeeProfileResponseSchema = employeeCodeResponseSchema.extend({
+  employeeId: z.string(),
   employeeRole: z.enum(['DEPARTMENT_CHIEF', 'TEAM_CHIEF', 'EMPLOYEE', 'LEFT']),
   employeeName: z.string(),
   positionCode: z.string(),
@@ -70,6 +77,10 @@ export type CreateEmployeeProfileRequestDto = z.infer<
 
 export type UpdateEmployeeProfileRequestDto = z.infer<
   typeof updateEmployeeProfileSchema
+>;
+
+export type EmployeeCodeResponseDto = z.infer<
+  typeof employeeCodeResponseSchema
 >;
 
 export type EmployeeProfileResponseDto = z.infer<

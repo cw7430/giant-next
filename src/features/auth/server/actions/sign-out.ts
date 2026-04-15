@@ -2,9 +2,9 @@
 
 import { cookies } from 'next/headers';
 
-import { type SignOutRequestDto } from '@/features/auth/schema';
+import type { SignOutRequestDto } from '@/features/auth/schema';
 import { apiPost } from '@/common/api/configs';
-import { type ApiSuccessSingle } from '@/common/api/schema';
+import type { ApiSuccessSingle } from '@/common/api/schema';
 
 export const signOutAction = async () => {
   const cookieStore = await cookies();

@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers';
 
-import { ApiSuccessWithResult } from '@/common/api/schema';
+import type { ApiSuccessWithResult } from '@/common/api/schema';
 import { ApiError } from '@/common/api/configs';
 import {
   type SignInAndRefreshResponseDtoForServer,
