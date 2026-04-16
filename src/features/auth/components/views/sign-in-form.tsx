@@ -29,7 +29,7 @@ export default function SignInForm() {
   const redirectTo = redirect && redirect.startsWith('/') ? redirect : '/';
 
   const signInForm = useForm<SignInRequestDto>({
-    mode: 'onBlur',
+    mode: 'onChange',
     resolver: zodResolver(signInRequestSchema),
     defaultValues: { userName: '', password: '', isAuto: isAutoSignIn },
   });
