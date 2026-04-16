@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useShallow } from 'zustand/shallow';
 import {
   Button,
@@ -15,8 +17,10 @@ import {
 import { useModalState } from '@/common/stores';
 import { useAuthStore } from '@/features/auth/stores';
 import {
-  DepartmentsResponseDto,
-  PositionsResponseDto,
+  createEmployeeProfileSchema,
+  type CreateEmployeeProfileRequestDto,
+  type DepartmentsResponseDto,
+  type PositionsResponseDto,
 } from '@/features/hr/schema';
 
 interface Props {
@@ -25,14 +29,43 @@ interface Props {
   positions: PositionsResponseDto;
 }
 
-export default function CreateProfileModal({ modalKey, departments }: Props) {
+export default function CreateProfileModal({
+  modalKey,
+  departments,
+  positions,
+}: Props) {
   const { modals, closeModal } = useModalState(
     useShallow((s) => ({ modals: s.modals, closeModal: s.closeModal })),
   );
   const team = useAuthStore((s) => s.team);
 
+  const isOpen = modals.includes(modalKey);
+  const isPermitted = team === 'TM100' || team === 'TM200';
+
   const [departmentCode, setDepartmentCode] = useState<string>('');
   const [teamCode, setTeamCode] = useState<string>('');
+
+  const createProfileForm = useForm<CreateEmployeeProfileRequestDto>({
+    mode: 'onChange',
+    resolver: zodResolver(createEmployeeProfileSchema),
+    defaultValues: {
+      employeeCode: '',
+      employeeName: '',
+      positionCode: '',
+      employeeRole: undefined,
+      teamCode: '',
+      phoneNumber: '',
+      email: '',
+    },
+  });
+
+  const {
+    handleSubmit,
+    control,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = createProfileForm;
 
   const availableTeams = useMemo(() => {
     const dept = departments.find((d) => d.departmentCode === departmentCode);
@@ -44,8 +77,9 @@ export default function CreateProfileModal({ modalKey, departments }: Props) {
     setTeamCode('');
   };
 
-  const isOpen = modals.includes(modalKey);
-  const isPermitted = team === 'TM100' || team === 'TM200';
+  const onSubmit: SubmitHandler<CreateEmployeeProfileRequestDto> = (req) => {
+    alert(JSON.stringify(req, null, 2));
+  };
 
   return (
     <Modal
@@ -56,39 +90,66 @@ export default function CreateProfileModal({ modalKey, departments }: Props) {
       <Modal.Header closeButton>사원 등록</Modal.Header>
       <Form>
         <Modal.Body>
-          <Form.Group className="mb-3">
-            <Form.Label htmlFor="employeeCode">사번</Form.Label>
+          <Form.Group className="mb-3" controlId="create-profile.employee-code">
+            <Form.Label>사번</Form.Label>
             <InputGroup>
-              <Form.Control type="text" id="employeeCode" readOnly={true} />
+              <Form.Control type="text" readOnly={true} />
               <Button variant="primary">발급</Button>
             </InputGroup>
           </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label htmlFor="employeeName">이름</Form.Label>
+          <Form.Group className="mb-3" controlId="create-profile.employee-name">
+            <Form.Label>이름</Form.Label>
             <InputGroup>
-              <Form.Control type="text" id="employeeName" />
+              <Form.Control type="text" />
             </InputGroup>
           </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label htmlFor="position">직급</Form.Label>
+          <Form.Group className="mb-3" controlId="create-profile.position">
+            <Form.Label>직급</Form.Label>
             <InputGroup>
-              <Form.Control type="text" id="position" />
+              <Form.Select>
+                <option value="" selected>
+                  선택
+                </option>
+                {positions.map((pstn) => (
+                  <option value={pstn.positionCode} key={pstn.positionId}>
+                    {pstn.positionName}
+                  </option>
+                ))}
+              </Form.Select>
             </InputGroup>
           </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label htmlFor="employeeRole">직책</Form.Label>
+          <Form.Group className="mb-3" controlId="create-profile.employee-role">
+            <Form.Label>직책</Form.Label>
             <InputGroup>
-              <Form.Control type="text" id="employeeRole" />
+              <Form.Select>
+                <option value="" selected>
+                  선택
+                </option>
+                <option value="EMPLOYEE" selected>
+                  팀원
+                </option>
+                <option value="TEAM_CHIEF" selected>
+                  팀장
+                </option>
+                <option value="DEPARTMENT_CHIEF" selected>
+                  총책
+                </option>
+              </Form.Select>
             </InputGroup>
           </Form.Group>
           <Form.Group as={Container} className="mb-3">
             <Row>
               <Col xs={2}>
-                <Form.Label htmlFor="department">부서</Form.Label>
+                <Form.Label htmlFor="create-profile.department">
+                  부서
+                </Form.Label>
               </Col>
               <Col xs={4}>
-                <Form.Select id="department" onChange={handleDeptChange}>
-                  <option value={''} selected>
+                <Form.Select
+                  id="create-profile.department"
+                  onChange={handleDeptChange}
+                >
+                  <option value="" selected>
                     선택
                   </option>
                   {departments.map((dept) => (
@@ -99,15 +160,15 @@ export default function CreateProfileModal({ modalKey, departments }: Props) {
                 </Form.Select>
               </Col>
               <Col xs={1}>
-                <Form.Label htmlFor="team">팀</Form.Label>
+                <Form.Label htmlFor="create-profile.team">팀</Form.Label>
               </Col>
               <Col xs={5}>
                 <Form.Select
-                  id="team"
+                  id="create-profile.team"
                   onChange={(e) => setTeamCode(e.target.value)}
                   disabled={!departmentCode}
                 >
-                  <option value={''} selected>
+                  <option value="" selected>
                     선택
                   </option>
                   {availableTeams.map((team) => (
@@ -119,16 +180,16 @@ export default function CreateProfileModal({ modalKey, departments }: Props) {
               </Col>
             </Row>
           </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label htmlFor="phoneNumber">전화번호</Form.Label>
+          <Form.Group className="mb-3" controlId="create-profile.phone-number">
+            <Form.Label>전화번호</Form.Label>
             <InputGroup>
-              <Form.Control type="text" id="phoneNumber" />
+              <Form.Control type="text" />
             </InputGroup>
           </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label htmlFor="email">이메일</Form.Label>
+          <Form.Group className="mb-3" controlId="create-profile.email">
+            <Form.Label>이메일</Form.Label>
             <InputGroup>
-              <Form.Control type="text" id="email" />
+              <Form.Control type="text" />
             </InputGroup>
           </Form.Group>
         </Modal.Body>
