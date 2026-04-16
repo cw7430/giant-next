@@ -11,6 +11,12 @@ export const employeeProfileListRequestSchema = pageRequestSchema([
 export const createEmployeeProfileSchema = z.object({
   employeeCode: z.string().min(1, '사번을 생성해주세요.'),
   employeeName: z.string().min(1, '사원 이름을 입력해주세요.'),
+  positionCode: z.string().regex(/^PSN\d{2,3}$/, '직급을 선택해주세요.'),
+  employeeRole: z.enum(
+    ['DEPARTMENT_CHIEF', 'TEAM_CHIEF', 'EMPLOYEE'],
+    '직책을 선택해주세요.',
+  ),
+  teamCode: z.string().regex(/^TM\d{3}$/, '부서와 팀을 선택해주세요.'),
   phoneNumber: z
     .string()
     .min(1, '휴대전화 번호를 입력해주세요.')
@@ -22,12 +28,6 @@ export const createEmployeeProfileSchema = z.object({
     .string()
     .min(1, '이메일 입력해주세요.')
     .pipe(z.email('이메일 형식이 올바르지 않습니다.')),
-  positionCode: z.string().regex(/^PSN\d{2,3}$/, '직급을 선택해주세요.'),
-  teamCode: z.string().regex(/^TM\d{3}$/, '부서와 팀을 선택해주세요.'),
-  employeeRole: z.enum(
-    ['DEPARTMENT_CHIEF', 'TEAM_CHIEF', 'EMPLOYEE'],
-    '직책을 선택해주세요.',
-  ),
 });
 
 export const updateEmployeeProfileSchema = z.object({
