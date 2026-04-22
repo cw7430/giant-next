@@ -6,7 +6,7 @@ import { Button } from 'react-bootstrap';
 
 import { useAuthStore } from '@/features/auth/stores';
 import { signOutAction } from '@/features/auth/server/actions';
-import { AUTH_KYES } from '@/features/auth/constants';
+import { AUTH_KEYS } from '@/features/auth/constants';
 
 export default function SignOutButton() {
   const router = useRouter();
@@ -15,7 +15,7 @@ export default function SignOutButton() {
   const signOut = useAuthStore((s) => s.signOut);
 
   const mutation = useMutation({
-    mutationKey: AUTH_KYES.signOut,
+    mutationKey: AUTH_KEYS.signOut,
     mutationFn: signOutAction,
     onSettled: () => {
       signOut();

@@ -9,7 +9,7 @@ import type { CreateEmployeeProfileRequestDto } from '@/features/hr/schema';
 import { getEmployeeCode } from '@/features/hr/server/actions/profiles';
 import { useDialogModalState, useModalState } from '@/common/stores';
 import { useAuthStore } from '@/features/auth/stores';
-import { HR_KYES } from '@/features/hr/constants';
+import { HR_KEYS } from '@/features/hr/constants';
 
 interface Props {
   setError: UseFormSetError<CreateEmployeeProfileRequestDto>;
@@ -32,10 +32,10 @@ export default function CreateEmployeeCodeButton({
   const signOut = useAuthStore((s) => s.signOut);
 
   const isCreatingProfile =
-    useIsMutating({ mutationKey: HR_KYES.createProfile }) > 0;
+    useIsMutating({ mutationKey: HR_KEYS.createProfile }) > 0;
 
   const mutation = useMutation({
-    mutationKey: HR_KYES.generateEmployeeCode,
+    mutationKey: HR_KEYS.generateEmployeeCode,
     mutationFn: getEmployeeCode,
     onSuccess: (res) => {
       if (res.code !== 'SU') {
