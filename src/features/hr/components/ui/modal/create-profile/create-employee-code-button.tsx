@@ -2,17 +2,19 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 import type { UseFormSetValue, UseFormSetError } from 'react-hook-form';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useIsMutating } from '@tanstack/react-query';
+import { Button, Spinner } from 'react-bootstrap';
 
 import type { CreateEmployeeProfileRequestDto } from '@/features/hr/schema';
 import { getEmployeeCode } from '@/features/hr/server/actions/profiles';
 import { useDialogModalState, useModalState } from '@/common/stores';
 import { useAuthStore } from '@/features/auth/stores';
-import { Button, Spinner } from 'react-bootstrap';
+import { HR_KYES } from '@/features/hr/constants';
 
 interface Props {
   setError: UseFormSetError<CreateEmployeeProfileRequestDto>;
   setValue: UseFormSetValue<CreateEmployeeProfileRequestDto>;
+  employeeCode: string;
   modalKey: string;
 }
 
@@ -20,6 +22,7 @@ export default function CreateEmployeeCodeButton({
   setError,
   setValue,
   modalKey,
+  employeeCode,
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
@@ -28,8 +31,11 @@ export default function CreateEmployeeCodeButton({
   const closeModal = useModalState((s) => s.closeModal);
   const signOut = useAuthStore((s) => s.signOut);
 
+  const isCreatingProfile =
+    useIsMutating({ mutationKey: HR_KYES.createProfile }) > 0;
+
   const mutation = useMutation({
-    mutationKey: ['hr', 'employee-code'],
+    mutationKey: HR_KYES.generateEmployeeCode,
     mutationFn: getEmployeeCode,
     onSuccess: (res) => {
       if (res.code !== 'SU') {
@@ -47,6 +53,7 @@ export default function CreateEmployeeCodeButton({
                 );
               },
             });
+            break;
           default:
             setError('employeeCode', {
               message:
@@ -72,7 +79,11 @@ export default function CreateEmployeeCodeButton({
   };
 
   return (
-    <Button variant="primary" onClick={onClick} disabled={mutation.isPending}>
+    <Button
+      variant="primary"
+      onClick={onClick}
+      disabled={mutation.isPending || isCreatingProfile || !!employeeCode}
+    >
       {mutation.isPending && <Spinner size="sm" />}
       발급
     </Button>
