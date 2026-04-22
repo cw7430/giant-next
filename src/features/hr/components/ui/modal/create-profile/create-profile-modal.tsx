@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useShallow } from 'zustand/shallow';
@@ -9,7 +9,6 @@ import {
   Modal,
   Form,
   InputGroup,
-  Container,
   Row,
   Col,
 } from 'react-bootstrap';
@@ -43,18 +42,7 @@ export default function CreateProfileModal({
   const isOpen = modals.includes(modalKey);
   const isPermitted = team === 'TM100' || team === 'TM200';
 
-  const phoneNumberRef = useRef<HTMLInputElement>(null);
-
   const [departmentCode, setDepartmentCode] = useState<string>('');
-
-  const handleHypenPhone = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = event.target.value;
-    const formattedValue = inputValue
-      .replace(/[^0-9]/g, '')
-      .replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
-    if (!phoneNumberRef.current) return;
-    phoneNumberRef.current.value = formattedValue;
-  };
 
   const createProfileForm = useForm<CreateEmployeeProfileRequestDto>({
     mode: 'onChange',
@@ -97,6 +85,12 @@ export default function CreateProfileModal({
     return dept ? dept.teams : [];
   }, [departments, departmentCode]);
 
+  const sortedPositions = useMemo(() => {
+    return [...positions].sort(
+      (a, b) => Number(b.positionId) - Number(a.positionId),
+    );
+  }, [positions]);
+
   const handleDeptChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setDepartmentCode(e.target.value);
     setValue('teamCode', '');
@@ -105,6 +99,13 @@ export default function CreateProfileModal({
   const onSubmit: SubmitHandler<CreateEmployeeProfileRequestDto> = (req) => {
     alert(JSON.stringify(req, null, 2));
   };
+
+  useEffect(() => {
+    if (!isOpen) {
+      createProfileForm.reset();
+      setDepartmentCode('');
+    }
+  }, [isOpen]);
 
   return (
     <Modal
@@ -157,6 +158,7 @@ export default function CreateProfileModal({
                     placeholder="사원 이름을 입력해주세요"
                     {...field}
                     isInvalid={!!errors.employeeName}
+                    maxLength={20}
                   />
                 )}
               />
@@ -174,7 +176,7 @@ export default function CreateProfileModal({
                 render={({ field }) => (
                   <Form.Select {...field} isInvalid={!!errors.positionCode}>
                     <option value="">선택</option>
-                    {positions.map((pstn) => (
+                    {sortedPositions.map((pstn) => (
                       <option value={pstn.positionCode} key={pstn.positionId}>
                         {pstn.positionName}
                       </option>
@@ -207,17 +209,17 @@ export default function CreateProfileModal({
               </Form.Control.Feedback>
             </InputGroup>
           </Form.Group>
-          <Form.Group as={Container} className="mb-3">
-            <Row>
-              <Col xs={2}>
-                <Form.Label htmlFor="create-profile.department">
-                  부서
-                </Form.Label>
-              </Col>
-              <Col xs={4}>
+          <Row>
+            <Form.Group
+              as={Col}
+              className="mb-3"
+              controlId="create-profile.department"
+            >
+              <Form.Label>부서</Form.Label>
+              <InputGroup>
                 <Form.Select
-                  id="create-profile.department"
                   onChange={handleDeptChange}
+                  isInvalid={!!errors.teamCode}
                 >
                   <option value="">선택</option>
                   {departments.map((dept) => (
@@ -226,20 +228,23 @@ export default function CreateProfileModal({
                     </option>
                   ))}
                 </Form.Select>
-              </Col>
-              <Col xs={1}>
-                <Form.Label htmlFor="create-profile.team">팀</Form.Label>
-              </Col>
-              <Col xs={5}>
+                <Form.Control.Feedback type="invalid">
+                  {errors.teamCode?.message}
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
+            <Form.Group
+              as={Col}
+              className="mb-3"
+              controlId="create-profile.team"
+            >
+              <Form.Label>팀</Form.Label>
+              <InputGroup>
                 <Controller
                   control={control}
                   name="teamCode"
                   render={({ field }) => (
-                    <Form.Select
-                      id="create-profile.team"
-                      {...field}
-                      isInvalid={!!errors.teamCode}
-                    >
+                    <Form.Select {...field} isInvalid={!!errors.teamCode}>
                       <option value="">선택</option>
                       {availableTeams.map((team) => (
                         <option value={team.teamCode} key={team.teamId}>
@@ -249,12 +254,9 @@ export default function CreateProfileModal({
                     </Form.Select>
                   )}
                 />
-              </Col>
-            </Row>
-            <Form.Control.Feedback type="invalid">
-              {errors.teamCode?.message}
-            </Form.Control.Feedback>
-          </Form.Group>
+              </InputGroup>
+            </Form.Group>
+          </Row>
           <Form.Group className="mb-3" controlId="create-profile.phone-number">
             <Form.Label>전화번호</Form.Label>
             <InputGroup>
@@ -267,6 +269,13 @@ export default function CreateProfileModal({
                     placeholder="사원 휴대전화번호를 입력해주세요"
                     {...field}
                     isInvalid={!!errors.phoneNumber}
+                    maxLength={12}
+                    onChange={(e) => {
+                      const formatted = e.target.value
+                        .replace(/[^0-9]/g, '')
+                        .replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
+                      field.onChange(formatted);
+                    }}
                   />
                 )}
               />
@@ -287,6 +296,7 @@ export default function CreateProfileModal({
                     placeholder="사원 이메일을 입력해주세요"
                     {...field}
                     isInvalid={!!errors.email}
+                    maxLength={100}
                   />
                 )}
               />
