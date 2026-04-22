@@ -9,6 +9,7 @@ import { useAppConfigStore, useDialogModalState } from '@/common/stores';
 import { useAuthStore } from '@/features/auth/stores';
 import { refreshAction } from '@/features/auth/server/actions';
 import type { RefreshRequestDto } from '@/features/auth/schema';
+import { AUTH_KYES } from '@/features/auth/constants';
 
 interface Props {
   checkAccessToken: boolean;
@@ -36,7 +37,7 @@ export default function AuthInitializer({ checkAccessToken }: Props) {
   }, []);
 
   const { mutateAsync: refreshMutate } = useMutation({
-    mutationKey: ['auth', 'refresh'],
+    mutationKey: AUTH_KYES.refresh,
     mutationFn: refreshAction,
     onSuccess: (response, variables) => {
       if (response.code === 'SU') {
