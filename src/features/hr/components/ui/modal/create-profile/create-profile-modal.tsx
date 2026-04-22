@@ -28,7 +28,7 @@ import { formatPhoneNumber } from '@/common/utils';
 import { sortPositionsDesc } from '@/features/hr/utils';
 import CreateEmployeeCodeButton from './create-employee-code-button';
 import { createProfile } from '@/features/hr/server/actions/profiles/profiles';
-import { HR_KYES } from '@/features/hr/constants';
+import { HR_KEYS } from '@/features/hr/constants';
 
 interface Props {
   modalKey: string;
@@ -53,7 +53,7 @@ export default function CreateProfileModal({
 
   const isOpen = modals.includes(modalKey);
   const isCreatingEmployeeCode =
-    useIsMutating({ mutationKey: HR_KYES.generateEmployeeCode }) > 0;
+    useIsMutating({ mutationKey: HR_KEYS.generateEmployeeCode }) > 0;
   const isPermitted = team === 'TM100' || team === 'TM200';
 
   const [departmentCode, setDepartmentCode] = useState<string>('');
@@ -110,7 +110,7 @@ export default function CreateProfileModal({
   };
 
   const mutation = useMutation({
-    mutationKey: HR_KYES.createProfile,
+    mutationKey: HR_KEYS.createProfile,
     mutationFn: createProfile,
     onSuccess: (res) => {
       if (res.code !== 'SU') {
